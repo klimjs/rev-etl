@@ -1,7 +1,7 @@
-import { ComponentExample } from "@/components/component-example";
+import { ETLFlowSetup } from '@/components/etl-flow-setup'
 
 export function App() {
-return <ComponentExample />;
+  return <ETLFlowSetup />
 }
 
-export default App;
+export default App
