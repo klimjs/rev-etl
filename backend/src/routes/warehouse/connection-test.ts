@@ -4,7 +4,7 @@ import { Pool } from 'pg'
 import { drizzle } from 'drizzle-orm/node-postgres'
 
 const connectionTest: FastifyPluginAsync = async (fastify) => {
-  fastify.post('/warehouse/connection-test', async (request, reply) => {
+  fastify.post('/connection-test', async (request, reply) => {
     // TODO: add validation
     const { connectionString } = request.body as { connectionString?: string }
 
