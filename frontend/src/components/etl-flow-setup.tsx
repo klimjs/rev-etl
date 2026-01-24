@@ -1,3 +1,5 @@
+import { useState } from 'react'
+import { Tabs as TabsPrimitive } from '@base-ui/react/tabs'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import { Settings } from '@/components/settings'
 import { Mapping } from '@/components/mapping'
@@ -6,12 +8,14 @@ import { useWarehouseStore } from '@/store/warehouse-store'
 
 export const ETLFlowSetup = () => {
   const { connectionStatus, selectedTable } = useWarehouseStore()
+  const [activeTab, setActiveTab] =
+    useState<TabsPrimitive.Tab.Value>('settings')
 
   const isMappingEnabled = connectionStatus === 'success' && !!selectedTable
 
   return (
     <div className="flex flex-col gap-1 mx-auto max-w-2xl min-w-sm p-4">
-      <Tabs defaultValue="settings">
+      <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList>
           <TabsTrigger value="settings" className="px-4">
             Settings
@@ -32,7 +36,7 @@ export const ETLFlowSetup = () => {
           <Settings />
         </TabsContent>
         <TabsContent value="mapping">
-          <Mapping />
+          <Mapping setActiveTab={setActiveTab} />
         </TabsContent>
         <TabsContent value="preview">
           <Preview />

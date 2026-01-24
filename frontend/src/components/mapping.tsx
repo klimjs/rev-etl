@@ -1,3 +1,4 @@
+import { Tabs as TabsPrimitive } from '@base-ui/react/tabs'
 import { Card, CardContent, CardFooter } from '@/components/ui/card'
 import {
   Table,
@@ -18,7 +19,11 @@ import { useWarehouseStore } from '@/store/warehouse-store'
 
 // TODO: JSON Field validation to prevent invalid JSON paths
 
-export const Mapping = () => {
+interface MappingProps {
+  setActiveTab: (value: TabsPrimitive.Tab.Value) => void
+}
+
+export const Mapping = ({ setActiveTab }: MappingProps) => {
   const {
     columns,
     isPending: isColumnsPending,
@@ -69,7 +74,11 @@ export const Mapping = () => {
       </CardContent>
 
       <CardFooter>
-        <Button variant="outline" disabled={isColumnsPending || isColumnsError}>
+        <Button
+          variant="outline"
+          disabled={isColumnsPending || isColumnsError || mapping.length === 0}
+          onClick={() => setActiveTab('preview')}
+        >
           <ListTree data-icon="inline-start" />
           Preview JSON
         </Button>
