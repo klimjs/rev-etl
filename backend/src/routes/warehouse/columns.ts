@@ -1,9 +1,10 @@
 import { FastifyPluginAsync } from 'fastify'
 import fp from 'fastify-plugin'
+import { sql } from 'drizzle-orm'
 
 const columnsRoute: FastifyPluginAsync = async (fastify) => {
   fastify.post('/warehouse/columns', async (request, reply) => {
-    const { pool } = fastify.getDbFromRequest(request)
+    const { db, pool } = fastify.getDbFromRequest(request)
 
     // TODO: add validation
     const { table } = request.body as {
@@ -14,15 +15,14 @@ const columnsRoute: FastifyPluginAsync = async (fastify) => {
     if (!table) return reply.badRequest('table is required')
 
     try {
-      const result = await pool.query<{ column_name: string }>(
-        `
-        SELECT column_name
-        FROM information_schema.columns
-        WHERE table_schema = 'public'
-          AND table_name = $1
-        ORDER BY ordinal_position
-      `,
-        [table],
+      const result = await db.execute<{ column_name: string }>(
+        sql`
+          SELECT column_name
+          FROM information_schema.columns
+          WHERE table_schema = 'public'
+            AND table_name = ${table}
+          ORDER BY ordinal_position
+        `,
       )
 
       const columns = result.rows.map((r) => r.column_name)

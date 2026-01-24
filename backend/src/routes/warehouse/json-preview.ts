@@ -1,5 +1,6 @@
 import { FastifyPluginAsync } from 'fastify'
 import fp from 'fastify-plugin'
+import { sql } from 'drizzle-orm'
 import { transformRows } from '../../lib/utils'
 import { JsonPreviewInput } from '../../lib/types'
 
@@ -20,14 +21,12 @@ const jsonPreview: FastifyPluginAsync = async (fastify) => {
       return reply.badRequest('mapping is required')
     }
 
-    const { pool } = fastify.getDbFromRequest(request)
+    const { db, pool } = fastify.getDbFromRequest(request)
 
     try {
       // TODO: fix types
-      // TODO: add SQL injection protection
-      const result = await pool.query<Record<string, any>>(
-        `SELECT * FROM ${table} LIMIT $1`,
-        [limit],
+      const result = await db.execute<Record<string, any>>(
+        sql`SELECT * FROM ${sql.identifier(table)} LIMIT ${limit}`,
       )
 
       return transformRows(result.rows, mapping)
