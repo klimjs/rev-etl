@@ -86,7 +86,9 @@ export const Settings = () => {
             <Select
               value={selectedTable}
               onValueChange={setSelectedTable}
-              disabled={!isConnectionSuccess || !isTablesSuccess}
+              disabled={
+                !isConnectionSuccess || !isTablesSuccess || isTablesPending
+              }
             >
               <SelectTrigger className="max-w-64" aria-invalid={isTablesError}>
                 <SelectValue placeholder="Select a table" />
