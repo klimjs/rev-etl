@@ -6,7 +6,8 @@ import {
   InputGroupButton,
 } from '@/components/ui/input-group'
 import { Field, FieldLabel, FieldGroup } from '@/components/ui/field'
-import { Database } from 'lucide-react'
+import { Database, CircleCheck, CircleX } from 'lucide-react'
+import { Spinner } from '@/components/ui/spinner'
 import {
   Select,
   SelectTrigger,
@@ -15,6 +16,7 @@ import {
   SelectGroup,
   SelectItem,
 } from '@/components/ui/select'
+import { useConnection } from '@/hooks/use-connection'
 
 export const Settings = () => {
   // Test tables
@@ -24,6 +26,22 @@ export const Settings = () => {
     { label: 'Customers', value: 'customers' },
     { label: 'Orders', value: 'orders' },
   ]
+
+  const {
+    connectionString,
+    setConnectionString,
+    testConnection,
+    isPending: isConnectionPending,
+    isSuccess: isConnectionSuccess,
+    isError: isConnectionError,
+  } = useConnection()
+
+  const renderConnectionIcon = () => {
+    if (isConnectionPending) return <Spinner />
+    if (isConnectionSuccess) return <CircleCheck className="text-green-600" />
+    if (isConnectionError) return <CircleX className="text-red-500" />
+    return <Database />
+  }
 
   return (
     <Card className="py-6">
@@ -35,12 +53,17 @@ export const Settings = () => {
               <InputGroupInput
                 id="connection"
                 placeholder="postgresql://postgres:postgres@server:9999/database"
+                value={connectionString}
+                onChange={(e) => setConnectionString(e.target.value)}
               />
-              <InputGroupAddon>
-                <Database />
-              </InputGroupAddon>
+              <InputGroupAddon>{renderConnectionIcon()}</InputGroupAddon>
               <InputGroupAddon align="inline-end">
-                <InputGroupButton>Test</InputGroupButton>
+                <InputGroupButton
+                  onClick={() => testConnection()}
+                  disabled={isConnectionPending || !connectionString}
+                >
+                  Test
+                </InputGroupButton>
               </InputGroupAddon>
             </InputGroup>
           </Field>
