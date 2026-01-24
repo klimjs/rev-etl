@@ -16,6 +16,8 @@ import { useWarehouseStore } from '@/store/warehouse-store'
 
 // TODO: add a hint for the JSON Field TableHead: user.name.first
 
+// TODO: JSON Field validation to prevent invalid JSON paths
+
 export const Mapping = () => {
   const {
     columns,
