@@ -5,7 +5,12 @@ import {
   InputGroupInput,
   InputGroupButton,
 } from '@/components/ui/input-group'
-import { Field, FieldLabel, FieldGroup } from '@/components/ui/field'
+import {
+  Field,
+  FieldLabel,
+  FieldGroup,
+  FieldError,
+} from '@/components/ui/field'
 import { Database, CircleCheck, CircleX } from 'lucide-react'
 import { Spinner } from '@/components/ui/spinner'
 import {
@@ -17,16 +22,10 @@ import {
   SelectItem,
 } from '@/components/ui/select'
 import { useConnection } from '@/hooks/use-connection'
+import { useTables } from '@/hooks/use-tables'
 
+// TODO: 2 separate components for connection and tables
 export const Settings = () => {
-  // Test tables
-  const tables = [
-    { label: 'Select a table', value: null },
-    { label: 'Users', value: 'users' },
-    { label: 'Customers', value: 'customers' },
-    { label: 'Orders', value: 'orders' },
-  ]
-
   const {
     connectionString,
     setConnectionString,
@@ -35,6 +34,16 @@ export const Settings = () => {
     isSuccess: isConnectionSuccess,
     isError: isConnectionError,
   } = useConnection()
+
+  const {
+    tables,
+    selectedTable,
+    setSelectedTable,
+    isPending: isTablesPending,
+    isSuccess: isTablesSuccess,
+    isError: isTablesError,
+    error: tablesError,
+  } = useTables(isConnectionSuccess)
 
   const renderConnectionIcon = () => {
     if (isConnectionPending) return <Spinner />
@@ -68,23 +77,32 @@ export const Settings = () => {
             </InputGroup>
           </Field>
 
-          <Field>
-            <FieldLabel>Table</FieldLabel>
+          <Field data-invalid={isTablesError}>
+            <div className="flex gap-1 items-center">
+              <FieldLabel>Table</FieldLabel>
+              {isTablesPending && <Spinner />}
+            </div>
 
-            <Select items={tables} disabled={false}>
-              <SelectTrigger className="max-w-64">
-                <SelectValue />
+            <Select
+              value={selectedTable}
+              onValueChange={setSelectedTable}
+              disabled={!isConnectionSuccess || !isTablesSuccess}
+            >
+              <SelectTrigger className="max-w-64" aria-invalid={isTablesError}>
+                <SelectValue placeholder="Select a table" />
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup>
                   {tables.map((table) => (
-                    <SelectItem key={table.value} value={table.value}>
-                      {table.label}
+                    <SelectItem key={table} value={table}>
+                      {table}
                     </SelectItem>
                   ))}
                 </SelectGroup>
               </SelectContent>
             </Select>
+
+            <FieldError>{tablesError?.message}</FieldError>
           </Field>
         </FieldGroup>
       </CardContent>
