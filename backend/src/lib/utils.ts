@@ -1,5 +1,5 @@
 import { setProperty } from 'dot-prop'
-import { ColumnMapping } from './types'
+import { ColumnMapping, TableRow } from './types'
 
 /**
  * Transform rows to a nested JSON object based on the mapping.
@@ -8,12 +8,11 @@ import { ColumnMapping } from './types'
  * @returns The transformed rows.
  */
 export const transformRows = (
-  rows: Array<Record<string, any>>,
+  rows: TableRow[],
   mapping: ColumnMapping[],
-): Array<Record<string, any>> => {
-  // TODO: fix types
+): TableRow[] => {
   return rows.map((row) =>
-    mapping.reduce<Record<string, any>>((acc, { column, path }) => {
+    mapping.reduce<TableRow>((acc, { column, path }) => {
       if (column in row) {
         setProperty(acc, path, row[column])
       }
