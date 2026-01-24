@@ -9,3 +9,5 @@ export interface JsonPreviewInput {
   limit?: number
   mapping: ColumnMapping[]
 }
+
+export type TableRow = Record<string, unknown>

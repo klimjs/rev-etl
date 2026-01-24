@@ -2,7 +2,7 @@ import { FastifyPluginAsync } from 'fastify'
 import fp from 'fastify-plugin'
 import { sql } from 'drizzle-orm'
 import { transformRows } from '../../lib/utils'
-import { JsonPreviewInput } from '../../lib/types'
+import { JsonPreviewInput, TableRow } from '../../lib/types'
 
 const DEFAULT_LIMIT = 5
 
@@ -24,8 +24,7 @@ const jsonPreview: FastifyPluginAsync = async (fastify) => {
     const { db, pool } = fastify.getDbFromRequest(request)
 
     try {
-      // TODO: fix types
-      const result = await db.execute<Record<string, any>>(
+      const result = await db.execute<TableRow>(
         sql`SELECT * FROM ${sql.identifier(table)} LIMIT ${limit}`,
       )
 
