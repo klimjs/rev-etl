@@ -12,6 +12,7 @@ import { Button } from '@/components/ui/button'
 import { Spinner } from '@/components/ui/spinner'
 import { ListTree } from 'lucide-react'
 import { useColumns } from '@/hooks/use-columns'
+import { useWarehouseStore } from '@/store/warehouse-store'
 
 // TODO: add a hint for the JSON Field TableHead: user.name.first
 
@@ -21,6 +22,11 @@ export const Mapping = () => {
     isPending: isColumnsPending,
     isError: isColumnsError,
   } = useColumns()
+
+  const { mapping, updateMapping } = useWarehouseStore()
+
+  const getTargetPath = (sourceColumn: string) =>
+    mapping.find((m) => m.sourceColumn === sourceColumn)?.targetPath ?? ''
 
   return (
     <Card className="py-6">
@@ -43,7 +49,15 @@ export const Mapping = () => {
                 <TableRow key={column}>
                   <TableCell>{column}</TableCell>
                   <TableCell>
-                    <Input />
+                    <Input
+                      value={getTargetPath(column)}
+                      onChange={(e) =>
+                        updateMapping({
+                          sourceColumn: column,
+                          targetPath: e.target.value,
+                        })
+                      }
+                    />
                   </TableCell>
                 </TableRow>
               ))}
