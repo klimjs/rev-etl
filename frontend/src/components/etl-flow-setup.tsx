@@ -5,7 +5,7 @@ import { Preview } from '@/components/preview'
 
 export const ETLFlowSetup = () => {
   return (
-    <div className="flex flex-col gap-1 mx-auto max-w-xl min-w-sm p-4">
+    <div className="flex flex-col gap-1 mx-auto max-w-2xl min-w-sm p-4">
       <Tabs defaultValue="settings">
         <TabsList>
           <TabsTrigger value="settings" className="px-4">
