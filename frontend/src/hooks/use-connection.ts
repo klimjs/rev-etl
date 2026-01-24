@@ -23,25 +23,25 @@ async function testConnection(
 }
 
 export function useConnection() {
-  const { connectionString, setConnectionString } = useWarehouseStore()
+  const {
+    connectionString,
+    connectionStatus,
+    setConnectionString,
+    setConnectionStatus,
+  } = useWarehouseStore()
 
-  const { mutate, isPending, isSuccess, isError, error, reset } = useMutation({
+  const { mutate, isPending } = useMutation({
     mutationFn: () => testConnection(connectionString),
+    onSuccess: () => setConnectionStatus('success'),
+    onError: () => setConnectionStatus('error'),
   })
-
-  const handleConnectionChange = (value: string) => {
-    setConnectionString(value)
-    reset()
-  }
 
   return {
     connectionString,
-    setConnectionString: handleConnectionChange,
+    setConnectionString,
     testConnection: mutate,
     isPending,
-    isSuccess,
-    isError,
-    error,
-    reset,
+    isSuccess: connectionStatus === 'success',
+    isError: connectionStatus === 'error',
   }
 }
