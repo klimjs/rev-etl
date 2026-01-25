@@ -7,11 +7,13 @@ import { Preview } from '@/components/preview'
 import { useWarehouseStore } from '@/store/warehouse-store'
 
 export const ETLFlowSetup = () => {
-  const { connectionStatus, selectedTable } = useWarehouseStore()
+  const { connectionStatus, selectedTable, mapping } = useWarehouseStore()
   const [activeTab, setActiveTab] =
     useState<TabsPrimitive.Tab.Value>('settings')
 
   const isMappingEnabled = connectionStatus === 'success' && !!selectedTable
+  const isPreviewEnabled =
+    connectionStatus === 'success' && !!selectedTable && mapping.length > 0
 
   return (
     <div className="flex flex-col gap-1 mx-auto max-w-2xl min-w-sm p-4">
@@ -27,7 +29,11 @@ export const ETLFlowSetup = () => {
           >
             Mapping
           </TabsTrigger>
-          <TabsTrigger value="preview" className="px-4">
+          <TabsTrigger
+            value="preview"
+            className="px-4"
+            disabled={!isPreviewEnabled}
+          >
             Preview
           </TabsTrigger>
         </TabsList>
