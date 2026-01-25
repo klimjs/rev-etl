@@ -19,7 +19,12 @@ export const Preview = () => {
         )}
 
         {!isPreviewPending && !isPreviewError && data.length > 0 && (
-          <ReactJson src={data} />
+          <ReactJson
+            src={data}
+            name={false}
+            enableClipboard={false}
+            displayDataTypes={false}
+          />
         )}
       </CardContent>
     </Card>
