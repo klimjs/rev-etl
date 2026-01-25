@@ -32,6 +32,9 @@ const dbPlugin: FastifyPluginAsync = async (fastify) => {
       connectionString,
       statement_timeout: STATEMENT_TIMEOUT,
       query_timeout: QUERY_TIMEOUT,
+      ssl: {
+        rejectUnauthorized: false,
+      },
     })
     const db = drizzle(pool)
 
