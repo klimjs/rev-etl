@@ -1,14 +1,9 @@
 import { useQuery } from '@tanstack/react-query'
-import { useWarehouseStore } from '@/store/warehouse-store'
+import { type Mapping, useWarehouseStore } from '@/store/warehouse-store'
 
 const API_URL = import.meta.env.VITE_API_URL
 
 type JsonPreviewResponse = Record<string, unknown>[]
-
-interface Mapping {
-  column: string
-  path: string
-}
 
 async function fetchJsonPreview(
   connectionString: string,
