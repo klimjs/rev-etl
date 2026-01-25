@@ -1,8 +1,8 @@
 import { create } from 'zustand'
 
 export type Mapping = {
-  sourceColumn: string
-  targetPath: string
+  column: string
+  path: string
 }
 
 export type ConnectionStatus = 'idle' | 'success' | 'error'
@@ -48,29 +48,27 @@ export const useWarehouseStore = create<WarehouseStore>((set) => ({
 
   setMapping: (mapping) => set({ mapping }),
 
-  updateMapping: ({ sourceColumn, targetPath }: Mapping) =>
+  updateMapping: ({ column, path }: Mapping) =>
     set((state) => {
       // If the target path is empty, remove the mapping
-      if (!targetPath.trim()) {
+      if (!path.trim()) {
         return {
-          mapping: state.mapping.filter((m) => m.sourceColumn !== sourceColumn),
+          mapping: state.mapping.filter((m) => m.column !== column),
         }
       }
 
       // If the mapping already exists, update the target path
-      const existing = state.mapping.find(
-        (m) => m.sourceColumn === sourceColumn,
-      )
+      const existing = state.mapping.find((m) => m.column === column)
       if (existing) {
         return {
           mapping: state.mapping.map((m) =>
-            m.sourceColumn === sourceColumn ? { ...m, targetPath } : m,
+            m.column === column ? { ...m, path } : m,
           ),
         }
       }
 
       // If the mapping does not exist, add it
-      return { mapping: [...state.mapping, { sourceColumn, targetPath }] }
+      return { mapping: [...state.mapping, { column, path }] }
     }),
 
   resetConnection: () =>

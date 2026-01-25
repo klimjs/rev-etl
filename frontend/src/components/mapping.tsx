@@ -32,8 +32,8 @@ export const Mapping = ({ setActiveTab }: MappingProps) => {
 
   const { mapping, updateMapping } = useWarehouseStore()
 
-  const getTargetPath = (sourceColumn: string) =>
-    mapping.find((m) => m.sourceColumn === sourceColumn)?.targetPath ?? ''
+  const getTargetPath = (column: string) =>
+    mapping.find((m) => m.column === column)?.path ?? ''
 
   return (
     <Card className="py-6">
@@ -59,9 +59,10 @@ export const Mapping = ({ setActiveTab }: MappingProps) => {
                     <Input
                       value={getTargetPath(column)}
                       onChange={(e) =>
+                        // TODO: add debounce to avoid re-renders on every key press
                         updateMapping({
-                          sourceColumn: column,
-                          targetPath: e.target.value,
+                          column,
+                          path: e.target.value,
                         })
                       }
                     />
