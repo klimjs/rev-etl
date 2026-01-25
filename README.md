@@ -8,8 +8,8 @@ A simplified Reverse ETL setup flow that allows users to connect to a PostgreSQL
 
 **Database for testing** (seeded with the data provided):
 
-```
-postgresql://etl_rrwq_user:37DJylwi8y0wzkjb9itdUA18EqS3q9hk@dpg-d5r62h63jp1c73fh883g-a.frankfurt-postgres.render.com/etl_rrwq
+```bash
+# see the link in the e-mail
 ```
 
 **Test table with data:** `users`
