@@ -9,8 +9,7 @@ const QUERY_TIMEOUT = 10000
 
 declare module 'fastify' {
   interface FastifyInstance {
-    // TODO: add proper type
-    getDbFromRequest: (request: any) => {
+    getDbFromRequest: (request: FastifyRequest) => {
       db: ReturnType<typeof drizzle>
       pool: Pool
     }
