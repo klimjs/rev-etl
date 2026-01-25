@@ -9,7 +9,7 @@ A simplified Reverse ETL setup flow that allows users to connect to a PostgreSQL
 **Database for testing** (seeded with the data provided):
 
 ```bash
-# see the link in the e-mail
+# see the connection string in the e-mail
 ```
 
 **Test table with data:** `users`
