@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { type Mapping, useWarehouseStore } from '@/store/warehouse-store'
+import { getMappingKey } from '@/lib/utils'
 
 const API_URL = import.meta.env.VITE_API_URL
 
@@ -27,7 +28,12 @@ export function useJsonPreview() {
   const enabled = !!connectionString && !!selectedTable && mapping.length > 0
 
   const { data, isFetching, isSuccess, isError, error } = useQuery({
-    queryKey: ['json-preview', connectionString, selectedTable, mapping],
+    queryKey: [
+      'json-preview',
+      connectionString,
+      selectedTable,
+      getMappingKey(mapping),
+    ],
     queryFn: () => fetchJsonPreview(connectionString, selectedTable!, mapping),
     enabled,
   })
