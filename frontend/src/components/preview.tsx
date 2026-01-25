@@ -17,6 +17,9 @@ export const Preview = () => {
         {isPreviewError && (
           <p className="text-red-500">Failed to load preview.</p>
         )}
+        {!isPreviewPending && !isPreviewError && data.length === 0 && (
+          <p className="text-muted-foreground">No data to preview.</p>
+        )}
 
         {!isPreviewPending && !isPreviewError && data.length > 0 && (
           <ReactJson
