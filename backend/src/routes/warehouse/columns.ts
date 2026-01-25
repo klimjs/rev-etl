@@ -2,6 +2,7 @@ import { FastifyPluginAsync } from 'fastify'
 import fp from 'fastify-plugin'
 import { sql } from 'drizzle-orm'
 import { columnsInputSchema } from '../../lib/types'
+import { getErrorMessage } from '../../lib/utils'
 
 const columnsRoute: FastifyPluginAsync = async (fastify) => {
   fastify.post('/warehouse/columns', async (request, reply) => {
@@ -29,8 +30,8 @@ const columnsRoute: FastifyPluginAsync = async (fastify) => {
       const columns = result.rows.map((r) => r.column_name)
 
       return { columns }
-    } catch (err: any) {
-      return reply.internalServerError(err.message)
+    } catch (err) {
+      return reply.internalServerError(getErrorMessage(err))
     } finally {
       await pool.end()
     }

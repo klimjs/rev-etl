@@ -1,6 +1,9 @@
 import { setProperty } from 'dot-prop'
 import { ColumnMapping, TableRow } from './types'
 
+export const getErrorMessage = (err: unknown): string =>
+  err instanceof Error ? err.message : 'Unknown error'
+
 /**
  * Transform rows to a nested JSON object based on the mapping.
  * @param rows - The rows to transform.

@@ -1,7 +1,7 @@
 import { FastifyPluginAsync } from 'fastify'
 import fp from 'fastify-plugin'
 import { sql } from 'drizzle-orm'
-import { transformRows } from '../../lib/utils'
+import { getErrorMessage, transformRows } from '../../lib/utils'
 import { jsonPreviewInputSchema, TableRow } from '../../lib/types'
 
 const DEFAULT_LIMIT = 5
@@ -24,8 +24,8 @@ const jsonPreview: FastifyPluginAsync = async (fastify) => {
       )
 
       return transformRows(result.rows, mapping)
-    } catch (err: any) {
-      return reply.internalServerError(err.message)
+    } catch (err) {
+      return reply.internalServerError(getErrorMessage(err))
     } finally {
       await pool.end()
     }
