@@ -1,3 +1,4 @@
+import '@fastify/sensible'
 import fp from 'fastify-plugin'
 import { FastifyPluginAsync } from 'fastify'
 import { Pool } from 'pg'
