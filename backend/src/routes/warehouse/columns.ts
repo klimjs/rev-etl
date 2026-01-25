@@ -22,7 +22,7 @@ const columnsRoute: FastifyPluginAsync = async (fastify) => {
           SELECT column_name
           FROM information_schema.columns
           WHERE table_schema = 'public'
-            AND table_name = ${sql.identifier(table)}
+            AND table_name = ${table}
           ORDER BY ordinal_position
         `,
       )
