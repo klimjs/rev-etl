@@ -1,13 +1,26 @@
 import { Card, CardContent } from '@/components/ui/card'
+import { Spinner } from '@/components/ui/spinner'
+import { useJsonPreview } from '@/hooks/use-json-preview'
+import ReactJson from '@microlink/react-json-view'
 
 export const Preview = () => {
+  const {
+    data,
+    isPending: isPreviewPending,
+    isError: isPreviewError,
+  } = useJsonPreview()
+
   return (
-    <Card>
-      <CardContent className="text-muted-foreground">
-        <p>
-          Preview the output — select a limited number of rows and see the
-          resulting JSON payload.
-        </p>
+    <Card className="py-6">
+      <CardContent>
+        {isPreviewPending && <Spinner />}
+        {isPreviewError && (
+          <p className="text-red-500">Failed to load preview.</p>
+        )}
+
+        {!isPreviewPending && !isPreviewError && data.length > 0 && (
+          <ReactJson src={data} />
+        )}
       </CardContent>
     </Card>
   )
