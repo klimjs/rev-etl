@@ -2,6 +2,7 @@ import fp from 'fastify-plugin'
 import { FastifyPluginAsync } from 'fastify'
 import { Pool } from 'pg'
 import { drizzle } from 'drizzle-orm/node-postgres'
+import { connectionStringSchema } from '../lib/types'
 
 const STATEMENT_TIMEOUT = 10000
 const QUERY_TIMEOUT = 10000
@@ -18,12 +19,13 @@ declare module 'fastify' {
 
 const dbPlugin: FastifyPluginAsync = async (fastify) => {
   fastify.decorate('getDbFromRequest', (request) => {
-    // TODO: add validation
-    const { connectionString } = request.body as { connectionString?: string }
+    const parsed = connectionStringSchema.safeParse(request.body)
 
-    if (!connectionString) {
-      throw fastify.httpErrors.badRequest('Connection string is required')
+    if (!parsed.success) {
+      throw fastify.httpErrors.badRequest(parsed.error.issues[0].message)
     }
+
+    const { connectionString } = parsed.data
 
     // create a temporary pool and drizzle instance per request
     const pool = new Pool({

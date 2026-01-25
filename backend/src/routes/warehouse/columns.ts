@@ -1,18 +1,19 @@
 import { FastifyPluginAsync } from 'fastify'
 import fp from 'fastify-plugin'
 import { sql } from 'drizzle-orm'
+import { columnsInputSchema } from '../../lib/types'
 
 const columnsRoute: FastifyPluginAsync = async (fastify) => {
   fastify.post('/warehouse/columns', async (request, reply) => {
-    const { db, pool } = fastify.getDbFromRequest(request)
+    const parsed = columnsInputSchema.safeParse(request.body)
 
-    // TODO: add validation
-    const { table } = request.body as {
-      connectionString?: string
-      table?: string
+    if (!parsed.success) {
+      return reply.badRequest(parsed.error.issues[0].message)
     }
 
-    if (!table) return reply.badRequest('table is required')
+    const { table } = parsed.data
+
+    const { db, pool } = fastify.getDbFromRequest(request)
 
     try {
       const result = await db.execute<{ column_name: string }>(

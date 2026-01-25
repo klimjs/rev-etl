@@ -2,24 +2,19 @@ import { FastifyPluginAsync } from 'fastify'
 import fp from 'fastify-plugin'
 import { sql } from 'drizzle-orm'
 import { transformRows } from '../../lib/utils'
-import { JsonPreviewInput, TableRow } from '../../lib/types'
+import { jsonPreviewInputSchema, TableRow } from '../../lib/types'
 
 const DEFAULT_LIMIT = 5
 
 const jsonPreview: FastifyPluginAsync = async (fastify) => {
   fastify.post('/warehouse/json-preview', async (request, reply) => {
-    // TODO: add validation
-    const {
-      table,
-      limit = DEFAULT_LIMIT,
-      mapping,
-    } = request.body as JsonPreviewInput
+    const parsed = jsonPreviewInputSchema.safeParse(request.body)
 
-    if (!table) return reply.badRequest('table is required')
-
-    if (!mapping || !Array.isArray(mapping) || mapping.length === 0) {
-      return reply.badRequest('mapping is required')
+    if (!parsed.success) {
+      return reply.badRequest(parsed.error.issues[0].message)
     }
+
+    const { table, limit = DEFAULT_LIMIT, mapping } = parsed.data
 
     const { db, pool } = fastify.getDbFromRequest(request)
 
