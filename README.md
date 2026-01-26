@@ -51,6 +51,15 @@ pnpm dev
 
 Set `VITE_API_URL` in `frontend/.env.local` to point to your backend URL.
 
+## API endpoints
+
+All endpoints are `POST` and require `connectionString` in the request body.
+
+- `/warehouse/connection-test` - Tests database connection. Returns `{ ok: true }`
+- `/warehouse/tables` - Fetches available tables. Returns `{ tables: string[] }`
+- `/warehouse/columns` - Fetches columns for a table. Requires `table`. Returns `{ columns: string[] }`
+- `/warehouse/json-preview` - Generates JSON preview with mapping. Requires `table` and `mapping` (array of `{ column, path }`), optional `limit` (default: 5). Returns array of transformed objects
+
 ## Assumptions
 
 - User already has a PostgreSQL connection string (no separate fields for server, port, etc. in the UI)
@@ -61,6 +70,7 @@ Set `VITE_API_URL` in `frontend/.env.local` to point to your backend URL.
 
 ### UX enhancements
 
+- **Connection string**: It should be masked (password hidden), stored securely, and never logged
 - **Mapping flow**: Add one column at a time instead of displaying all columns at once
 - **Preview controls**: Add ability to select the number of rows to preview (backend already supports `limit` parameter)
 - **Column toggles**: Ability to enable/disable columns for JSON output (currently, if a JSON path exists, the column is included)
